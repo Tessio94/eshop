@@ -1,5 +1,4 @@
 import { Button } from "@/components/common/Button";
-import type { ChangeEvent } from "react";
 
 export type SortOption = "default" | "price-asc" | "price-desc" | "rating";
 
@@ -11,44 +10,21 @@ export type ProductFilterValues = {
 
 type ProductFiltersProps = {
 	filters: ProductFilterValues;
-	categories: string[];
-	onChange: (filters: ProductFilterValues) => void;
+	categories?: string[];
+	onSearchChange: (value: string) => void;
+	onCategoryChange?: (value: string) => void;
+	onSortChange: (value: SortOption) => void;
+	onClear: () => void;
 };
 
 export function ProductFilters({
 	filters,
 	categories,
-	onChange,
+	onSearchChange,
+	onCategoryChange,
+	onSortChange,
+	onClear,
 }: ProductFiltersProps) {
-	const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-		onChange({
-			...filters,
-			search: event.target.value,
-		});
-	};
-
-	const handleCategory = (event: ChangeEvent<HTMLSelectElement>) => {
-		onChange({
-			...filters,
-			category: event.target.value,
-		});
-	};
-
-	const handleSort = (event: ChangeEvent<HTMLSelectElement>) => {
-		onChange({
-			...filters,
-			sort: event.target.value as SortOption,
-		});
-	};
-
-	const clearFilters = () => {
-		onChange({
-			search: "",
-			category: "",
-			sort: "default",
-		});
-	};
-
 	const hasFilters =
 		filters.search !== "" ||
 		filters.category !== "" ||
@@ -82,7 +58,7 @@ export function ProductFilters({
 							id="product-search"
 							type="search"
 							value={filters.search}
-							onChange={handleSearch}
+							onChange={(event) => onSearchChange(event.target.value)}
 							placeholder="Search products..."
 							className="w-full rounded-xl border border-border bg-slate-50 py-2.5 pl-10 pr-4 text-sm outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-2 focus:ring-brand-100"
 						/>
@@ -90,30 +66,31 @@ export function ProductFilters({
 				</div>
 
 				{/* Category */}
-				<div className="w-full lg:w-52">
-					<label
-						htmlFor="product-category"
-						className="mb-2 block text-sm font-medium text-slate-700"
-					>
-						Category
-					</label>
+				{categories && categories.length > 0 && onCategoryChange && (
+					<div className="w-full lg:w-52">
+						<label
+							htmlFor="product-category"
+							className="mb-2 block text-sm font-medium text-slate-700"
+						>
+							Category
+						</label>
 
-					<select
-						id="product-category"
-						value={filters.category}
-						onChange={handleCategory}
-						className="w-full rounded-xl border border-border bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-2 focus:ring-brand-100"
-					>
-						<option value="">All categories</option>
+						<select
+							id="product-category"
+							value={filters.category}
+							onChange={(event) => onCategoryChange(event.target.value)}
+							className="w-full rounded-xl border border-border bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-2 focus:ring-brand-100"
+						>
+							<option value="">All categories</option>
 
-						{categories.map((category) => (
-							<option key={category} value={category}>
-								{category}
-							</option>
-						))}
-					</select>
-				</div>
-
+							{categories.map((category) => (
+								<option key={category} value={category}>
+									{category}
+								</option>
+							))}
+						</select>
+					</div>
+				)}
 				{/* Sort */}
 				<div className="w-full lg:w-52">
 					<label
@@ -126,7 +103,7 @@ export function ProductFilters({
 					<select
 						id="product-sort"
 						value={filters.sort}
-						onChange={handleSort}
+						onChange={(event) => onSortChange(event.target.value as SortOption)}
 						className="w-full rounded-xl border border-border bg-slate-50 px-3 py-2.5 text-sm text-slate-700 outline-none transition focus:border-brand-500 focus:bg-white focus:ring-2 focus:ring-brand-100"
 					>
 						<option value="default">Recommended</option>
@@ -138,7 +115,7 @@ export function ProductFilters({
 
 				{/* Clear */}
 				{hasFilters && (
-					<Button variant="ghost" size="sm" onClick={clearFilters}>
+					<Button variant="ghost" size="sm" onClick={onClear}>
 						Clear
 					</Button>
 				)}

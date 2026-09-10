@@ -6,13 +6,14 @@ import { ProductsPage } from "@/pages/ProductsPage";
 import { ProductDetailsPage } from "@/pages/ProductDetailsPage";
 import { FavoritesPage } from "@/pages/FavoritesPage";
 import { CategoryPage } from "@/pages/CategoryPage";
-import { Categories } from "@/pages/Categories";
+import { CategoriesPage } from "@/pages/CategoriesPage";
 import { CartPage } from "@/pages/CartPage";
 import { CheckoutPage } from "@/pages/CheckoutPage";
 import { OrdersPage } from "@/pages/OrdersPage";
 import { OrderDetailsPage } from "@/pages/OrderDetailsPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
+import { productsLoader } from "./loaders";
 
 export const router = BrowserRouter([
 	{
@@ -25,6 +26,7 @@ export const router = BrowserRouter([
 			},
 			{
 				path: "products",
+				loader: productsLoader,
 				element: <ProductsPage />,
 			},
 			{
@@ -33,7 +35,7 @@ export const router = BrowserRouter([
 			},
 			{
 				path: "categories",
-				element: <Categories />,
+				element: <CategoriesPage />,
 			},
 			{
 				path: "categories/:categoryId",

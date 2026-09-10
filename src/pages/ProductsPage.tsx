@@ -1,4 +1,17 @@
 import { useMemo, useState } from "react";
+import { useDebouncedValue } from "rooks";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { selectProductFilters } from "@/features/products/productFilterSelectors";
+import {
+	clearFilters,
+	setCategory,
+	setSearch,
+	setSort,
+} from "@/features/products/productFiltersSlice";
+
+import { filterAndSortProducts } from "@/utils/productUtils";
+
+// import { products } from "@/data/products";
 
 import { Pagination } from "@/components/product/Pagination";
 import {
@@ -6,49 +19,29 @@ import {
 	type ProductFilterValues,
 } from "@/components/product/ProductFilters";
 import { ProductList } from "@/components/product/ProductList";
-import { products } from "@/data/products";
+import { useGetProductsQuery } from "@/services/productApi";
 
 const PRODUCTS_PER_PAGE = 8;
 
 export function ProductsPage() {
-	const [filters, setFilters] = useState<ProductFilterValues>({
-		search: "",
-		category: "",
-		sort: "default",
-	});
-
 	const [currentPage, setCurrentPage] = useState(1);
+
+	const dispatch = useAppDispatch();
+
+	const { data: products = [], isLoading, isError } = useGetProductsQuery();
+
+	const filters: ProductFilterValues = useAppSelector(selectProductFilters);
 
 	const categories = useMemo(() => {
 		return [...new Set(products.map((product) => product.category))];
 	}, [products]);
 
-	const filteredProducts = useMemo(() => {
-		const result = products.filter((product) => {
-			const matchesSearch = product.title
-				.toLowerCase()
-				.includes(filters.search.toLowerCase());
+	const [debouncedSearch] = useDebouncedValue(filters.search, 300);
 
-			const matchesCategory =
-				filters.category === "" || product.category === filters.category;
-
-			return matchesSearch && matchesCategory;
-		});
-
-		switch (filters.sort) {
-			case "price-asc":
-				return [...result].sort((a, b) => a.price - b.price);
-
-			case "price-desc":
-				return [...result].sort((a, b) => b.price - a.price);
-
-			case "rating":
-				return [...result].sort((a, b) => b.rating.rate - a.rating.rate);
-
-			default:
-				return result;
-		}
-	}, [filters]);
+	const filteredProducts = filterAndSortProducts(products, {
+		...filters,
+		search: debouncedSearch,
+	});
 
 	const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
 
@@ -56,11 +49,6 @@ export function ProductsPage() {
 		(currentPage - 1) * PRODUCTS_PER_PAGE,
 		currentPage * PRODUCTS_PER_PAGE,
 	);
-
-	const handleFiltersChange = (newFilters: ProductFilterValues) => {
-		setFilters(newFilters);
-		setCurrentPage(1);
-	};
 
 	const handlePageChange = (page: number) => {
 		setCurrentPage(page);
@@ -103,7 +91,22 @@ export function ProductsPage() {
 			<ProductFilters
 				filters={filters}
 				categories={categories}
-				onChange={handleFiltersChange}
+				onSearchChange={(value) => {
+					dispatch(setSearch(value));
+					setCurrentPage(1);
+				}}
+				onCategoryChange={(value) => {
+					dispatch(setCategory(value));
+					setCurrentPage(1);
+				}}
+				onSortChange={(value) => {
+					dispatch(setSort(value));
+					setCurrentPage(1);
+				}}
+				onClear={() => {
+					dispatch(clearFilters());
+					setCurrentPage(1);
+				}}
 			/>
 
 			{/* Products */}

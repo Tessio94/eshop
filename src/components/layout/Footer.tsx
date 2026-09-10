@@ -1,4 +1,6 @@
 import { Link } from "react-router";
+import headerLogo from "@/assets/header-logo.png";
+import headerLogoMobile from "@/assets/header-logo-mobile.png";
 
 export function Footer() {
 	return (
@@ -8,19 +10,21 @@ export function Footer() {
 					{/* Brand */}
 					<div>
 						<Link to="/" className="flex items-center gap-2">
-							<div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-sm font-bold text-white">
-								M
-							</div>
-
-							<span className="font-bold text-slate-900">
-								Market<span className="text-brand-600">ly</span>
-							</span>
+							<img
+								className="max-h-10 w-auto object-contain sm:block hidden"
+								src={headerLogo}
+								alt="Sime store logo"
+								width={250}
+								height={115}
+							/>
+							<img
+								className="max-h-10 w-auto object-contain block sm:hidden"
+								src={headerLogoMobile}
+								alt="Sime store logo"
+								width={96}
+								height={44}
+							/>
 						</Link>
-
-						<p className="mt-3 max-w-xs text-sm leading-6 text-slate-500">
-							A modern marketplace built with React, TypeScript, Redux Toolkit
-							and RTK Query.
-						</p>
 					</div>
 
 					{/* Shop */}
@@ -86,7 +90,7 @@ export function Footer() {
 				</div>
 
 				<div className="mt-10 border-t border-border pt-6 text-center text-xs text-slate-400">
-					© 2026 Marketly. Practice project.
+					© 2026 SK. Practice project.
 				</div>
 			</div>
 		</footer>

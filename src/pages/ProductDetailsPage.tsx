@@ -1,11 +1,20 @@
 import { Link, useParams } from "react-router";
 import { products } from "@/data/products";
 import { Button } from "@/components/common/Button";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import { addToCart } from "@/features/cart/cartSlice";
+import { addToFavorites } from "@/features/favorites/favoritesSlice";
+import { cn } from "@/utils/cn";
+import { selectIsFavorite } from "@/features/favorites/favoritesSelectors";
 
 export function ProductDetailsPage() {
 	const { productId } = useParams();
 
+	const dispatch = useAppDispatch();
+
 	const product = products.find((product) => product.id === Number(productId));
+
+	const isFavorite = useAppSelector(selectIsFavorite(product?.id as number));
 
 	if (!product) {
 		return (
@@ -89,9 +98,20 @@ export function ProductDetailsPage() {
 
 					<div className="mt-8 flex flex-col gap-3 sm:flex-row">
 						<div className="mt-8 flex flex-col gap-3 sm:flex-row">
-							<Button className="flex-1">Add to cart</Button>
+							<Button
+								className="flex-1"
+								onClick={() => dispatch(addToCart(product))}
+							>
+								Add to cart
+							</Button>
 
-							<Button variant="secondary">♡ Favorite</Button>
+							<Button
+								variant="secondary"
+								onClick={() => dispatch(addToFavorites(product))}
+								className={cn(isFavorite && "bg-red-500/50!")}
+							>
+								♡ Favorite
+							</Button>
 						</div>
 					</div>
 				</div>

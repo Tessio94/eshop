@@ -1,15 +1,16 @@
+import { cn } from "@/utils/cn";
 import { NavLink } from "react-router";
 
 interface NavigationProps {
 	mobile?: boolean;
-	onNavigate?: () => void;
+	onClick?: () => void;
 }
 
-export function Navigation({ mobile = false, onNavigate }: NavigationProps) {
+export function Navigation({ mobile = false, onClick }: NavigationProps) {
 	const links = [
 		{ to: "/", label: "Home", end: true },
 		{ to: "/products", label: "Products" },
-		{ to: "/categories/electronics", label: "Categories" },
+		{ to: "/categories", label: "Categories" },
 		{ to: "/favorites", label: "Favorites" },
 	];
 
@@ -20,15 +21,15 @@ export function Navigation({ mobile = false, onNavigate }: NavigationProps) {
 					key={link.to}
 					to={link.to}
 					end={link.end}
-					onClick={onNavigate}
+					onClick={onClick}
 					className={({ isActive }) =>
-						[
-							"rounded-lg px-3 py-2 text-sm font-medium transition",
-							mobile ? "w-full" : "",
+						cn(
+							"rounded-lg px-4 py-2 text-base font-medium transition",
+							mobile && "w-full",
 							isActive
 								? "bg-brand-50 text-brand-700"
 								: "text-slate-600 hover:bg-slate-50 hover:text-brand-600",
-						].join(" ")
+						)
 					}
 				>
 					{link.label}
