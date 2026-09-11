@@ -22,6 +22,7 @@ export const router = BrowserRouter([
 		children: [
 			{
 				index: true,
+				loader: productsLoader,
 				element: <HomePage />,
 			},
 			{

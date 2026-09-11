@@ -22,14 +22,14 @@ export function Header() {
 				{/* Logo */}
 				<Link to="/" className="flex items-center gap-2">
 					<img
-						className="max-h-10 w-auto object-contain sm:block hidden"
+						className="max-h-9 w-auto object-contain sm:block hidden"
 						src={headerLogo}
 						alt="Sime store logo"
 						width={250}
 						height={115}
 					/>
 					<img
-						className="max-h-10 w-auto object-contain block sm:hidden"
+						className="max-h-6 w-auto object-contain block sm:hidden"
 						src={headerLogoMobile}
 						alt="Sime store logo"
 						width={96}

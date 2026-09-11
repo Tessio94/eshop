@@ -24,7 +24,7 @@ export function Navigation({ mobile = false, onClick }: NavigationProps) {
 					onClick={onClick}
 					className={({ isActive }) =>
 						cn(
-							"rounded-lg px-4 py-2 text-base font-medium transition",
+							"rounded-lg px-4 py-2 text-base font-medium font-display transition mt-1 tracking-tight",
 							mobile && "w-full",
 							isActive
 								? "bg-brand-50 text-brand-700"
