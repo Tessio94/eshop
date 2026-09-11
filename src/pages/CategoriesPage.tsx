@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 
 import { products } from "@/data/products";
+import { Banner } from "@/components/category/Banner";
 
 export function CategoriesPage() {
 	const categories = [...new Set(products.map((product) => product.category))];
@@ -21,7 +22,7 @@ export function CategoriesPage() {
 					categories.
 				</p>
 			</div>
-
+			<Banner />
 			<div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
 				{categories.map((category) => {
 					const productCount = products.filter(
