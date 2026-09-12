@@ -1,10 +1,6 @@
 import type { Product } from "@/types/product";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-
-type CartItem = {
-  product: Product;
-  quantity: number;
-};
+import type { CartItem } from "@/types/cart";
 
 type CartState = {
   items: CartItem[];
