@@ -3,106 +3,115 @@ import { useState } from "react";
 import { Button } from "@/components/common/Button";
 import { useGetUsersQuery, useLoginMutation } from "@/services/userApi";
 import { useAppDispatch } from "@/app/hooks";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { setCredentials } from "@/features/auth/authSlice";
 
 export function LoginPage() {
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-	const dispatch = useAppDispatch();
-	const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-	const [login, { isLoading, isError }] = useLoginMutation();
+  const [searchParams] = useSearchParams();
 
-	const { data: users = [] } = useGetUsersQuery();
-	console.log(users);
+  const [login, { isLoading, isError }] = useLoginMutation();
 
-	async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
-		event.preventDefault();
+  const { data: users = [] } = useGetUsersQuery();
+  console.log(users);
 
-		try {
-			const result = await login({
-				username,
-				password,
-			}).unwrap();
+  const redirectTo = searchParams.get("redirect") ?? "/orders";
 
-			dispatch(setCredentials(result.token));
+  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-			navigate("/orders");
-		} catch (error) {
-			console.error("Create user failed:", error);
-		}
-	}
+    try {
+      const result = await login({
+        username,
+        password,
+      }).unwrap();
 
-	return (
-		<section className="mx-auto flex max-w-7xl justify-center px-4 py-16 sm:px-6 lg:px-8">
-			<div className="w-full max-w-md">
-				<div className="text-center">
-					<p className="text-sm font-semibold uppercase tracking-wide text-brand-600">
-						Welcome back
-					</p>
+      dispatch(
+        setCredentials({
+          token: result.token,
+          username,
+        }),
+      );
 
-					<h1 className="mt-2 text-3xl font-bold text-slate-900">Sign in</h1>
+      navigate(redirectTo);
+    } catch (error) {
+      console.error("Create user failed:", error);
+    }
+  }
 
-					<p className="mt-2 text-slate-600">
-						Sign in to access your account and orders.
-					</p>
-				</div>
+  return (
+    <section className="mx-auto flex max-w-7xl justify-center px-4 py-16 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md">
+        <div className="text-center">
+          <p className="text-sm font-semibold uppercase tracking-wide text-brand-600">
+            Welcome back
+          </p>
 
-				<form
-					onSubmit={handleSubmit}
-					className="mt-8 rounded-2xl border border-border bg-white p-6 shadow-sm"
-				>
-					<div>
-						<label
-							htmlFor="username"
-							className="block text-sm font-semibold text-slate-700"
-						>
-							Username
-						</label>
+          <h1 className="mt-2 text-3xl font-bold text-slate-900">Sign in</h1>
 
-						<input
-							id="username"
-							type="username"
-							value={username}
-							onChange={(e) => setUsername(e.target.value)}
-							className="mt-2 w-full rounded-lg border border-border px-3 py-2.5 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
-							placeholder="Username"
-							required
-						/>
-					</div>
+          <p className="mt-2 text-slate-600">
+            Sign in to access your account and orders.
+          </p>
+        </div>
 
-					<div className="mt-5">
-						<label
-							htmlFor="password"
-							className="block text-sm font-semibold text-slate-700"
-						>
-							Password
-						</label>
+        <form
+          onSubmit={handleSubmit}
+          className="mt-8 rounded-2xl border border-border bg-white p-6 shadow-sm"
+        >
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-semibold text-slate-700"
+            >
+              Username
+            </label>
 
-						<input
-							id="password"
-							type="password"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							className="mt-2 w-full rounded-lg border border-border px-3 py-2.5 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
-							placeholder="••••••••"
-							required
-						/>
-					</div>
+            <input
+              id="username"
+              type="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="mt-2 w-full rounded-lg border border-border px-3 py-2.5 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+              placeholder="Username"
+              required
+            />
+          </div>
 
-					<Button type="submit" className="mt-6 w-full" disabled={isLoading}>
-						{isLoading ? "Signing in..." : "Sign in"}
-					</Button>
+          <div className="mt-5">
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold text-slate-700"
+            >
+              Password
+            </label>
 
-					{isError && (
-						<p className="mt-4 text-sm text-red-600">
-							Invalid username or password.
-						</p>
-					)}
-				</form>
-			</div>
-		</section>
-	);
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="mt-2 w-full rounded-lg border border-border px-3 py-2.5 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+
+          <Button type="submit" className="mt-6 w-full" disabled={isLoading}>
+            {isLoading ? "Signing in..." : "Sign in"}
+          </Button>
+
+          {isError && (
+            <p className="mt-4 text-sm text-red-600">
+              Invalid username or password.
+            </p>
+          )}
+        </form>
+      </div>
+    </section>
+  );
 }
