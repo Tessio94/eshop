@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import bannerImage from "@/assets/banner-image.avif";
 
 export function PromoBanner() {
 	return (
@@ -30,9 +31,10 @@ export function PromoBanner() {
 
 				<div className="relative min-h-[300px] overflow-hidden">
 					<img
-						src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=85"
+						src={bannerImage}
 						alt="Customer browsing a fashion collection"
 						className="absolute inset-0 h-full w-full object-cover object-[0%_30%]"
+						loading="lazy"
 					/>
 
 					<div className="absolute inset-0 bg-brand-900/20" />

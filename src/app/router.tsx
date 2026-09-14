@@ -14,70 +14,82 @@ import { OrderDetailsPage } from "@/pages/OrderDetailsPage";
 import { LoginPage } from "@/pages/LoginPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
 import {
-  categoriesLoader,
-  categoryProductsLoader,
-  productDetailsLoader,
-  productsLoader,
+	categoriesLoader,
+	categoryProductsLoader,
+	productDetailsLoader,
+	productsLoader,
+	requireAuth,
+	requireGuest,
 } from "./loaders";
+import { ErrorMessage } from "@/components/common/ErrorMessage";
+import { AuthLayout } from "@/layouts/AuthLayout";
 
 export const router = BrowserRouter([
-  {
-    path: "/",
-    element: <MainLayout />,
-    children: [
-      {
-        index: true,
-        loader: productsLoader,
-        element: <HomePage />,
-      },
-      {
-        path: "products",
-        loader: productsLoader,
-        element: <ProductsPage />,
-      },
-      {
-        path: "products/:productId",
-        loader: productDetailsLoader,
-        element: <ProductDetailsPage />,
-      },
-      {
-        path: "categories",
-        loader: categoriesLoader,
-        element: <CategoriesPage />,
-      },
-      {
-        path: "categories/:categoryId",
-        loader: categoryProductsLoader,
-        element: <CategoryPage />,
-      },
-      {
-        path: "favorites",
-        element: <FavoritesPage />,
-      },
-      {
-        path: "cart",
-        element: <CartPage />,
-      },
-      {
-        path: "checkout",
-        element: <CheckoutPage />,
-      },
-      {
-        path: "orders",
-        element: <OrdersPage />,
-      },
-      {
-        path: "orders/:orderId",
-        element: <OrderDetailsPage />,
-      },
-      {
-        path: "login",
-        element: <LoginPage />,
-      },
-      {
-        path: "*",
-        element: <NotFoundPage />,
-      },
-    ],
-  },
+	{
+		path: "/",
+		element: <MainLayout />,
+		errorElement: <ErrorMessage />,
+		children: [
+			{
+				index: true,
+				loader: productsLoader,
+				element: <HomePage />,
+			},
+			{
+				path: "products",
+				loader: productsLoader,
+				element: <ProductsPage />,
+			},
+			{
+				path: "products/:productId",
+				loader: productDetailsLoader,
+				element: <ProductDetailsPage />,
+			},
+			{
+				path: "categories",
+				loader: categoriesLoader,
+				element: <CategoriesPage />,
+			},
+			{
+				path: "categories/:categoryId",
+				loader: categoryProductsLoader,
+				element: <CategoryPage />,
+			},
+			{
+				path: "favorites",
+				element: <FavoritesPage />,
+			},
+			{
+				path: "cart",
+				element: <CartPage />,
+			},
+			{
+				loader: requireAuth,
+				element: <AuthLayout />,
+				children: [
+					{
+						path: "checkout",
+						element: <CheckoutPage />,
+					},
+					{
+						path: "orders",
+						element: <OrdersPage />,
+					},
+					{
+						path: "orders/:orderId",
+						element: <OrderDetailsPage />,
+					},
+				],
+			},
+			{
+				path: "login",
+				loader: requireGuest,
+				element: <LoginPage />,
+			},
+			{
+				path: "*",
+				element: <NotFoundPage />,
+			},
+		],
+	},
 ]);

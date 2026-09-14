@@ -20,8 +20,8 @@ const variantClasses: Record<ButtonVariant, string> = {
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-	sm: "px-3 pt-2 pb-1.5 text-sm",
-	md: "px-4 pt-2.5 pb-2 text-sm",
+	sm: "px-3 pt-2 pb-1.5 text-sm!",
+	md: "px-4 pt-2.5 pb-2 text-sm!",
 	lg: "px-6 pt-3 pb-2.5",
 	icon: "h-9 w-9 p-0",
 };

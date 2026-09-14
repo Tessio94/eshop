@@ -9,7 +9,7 @@ export function Footer() {
 				<div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
 					{/* Brand */}
 					<div>
-						<Link to="/" className="flex items-center gap-2">
+						<a href="#" className="flex items-center gap-2">
 							<img
 								className="max-h-10 w-auto object-contain sm:block hidden"
 								src={headerLogo}
@@ -24,7 +24,7 @@ export function Footer() {
 								width={96}
 								height={44}
 							/>
-						</Link>
+						</a>
 					</div>
 
 					{/* Shop */}

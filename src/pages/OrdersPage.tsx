@@ -1,3 +1,49 @@
+import { useAppSelector } from "@/app/hooks";
+import { selectOrders } from "@/features/orders/ordersSelectors";
+import { Link } from "react-router";
+
 export function OrdersPage() {
-	return <div>OrdersPage</div>;
+	const orders = useAppSelector(selectOrders);
+
+	return (
+		<section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+			{orders.length === 0 ? (
+				<div className="rounded-2xl border border-border bg-white p-8 text-center">
+					<p className="text-slate-500">You don't have any orders yet.</p>
+				</div>
+			) : (
+				<div className="space-y-4">
+					{orders.map((order) => (
+						<Link
+							key={order.id}
+							to={`/orders/${order.id}`}
+							className="block rounded-2xl border border-border bg-white p-6 transition hover:border-brand-300 hover:shadow-sm"
+						>
+							<div className="flex items-center justify-between">
+								<div>
+									<p className="font-semibold text-slate-900">
+										Order #{order.id.slice(0, 8)}
+									</p>
+
+									<p className="mt-1 text-sm text-slate-500">
+										{new Date(order.createdAt).toLocaleDateString()}
+									</p>
+								</div>
+
+								<div className="text-right">
+									<p className="font-semibold text-slate-900">
+										${order.total.toFixed(2)}
+									</p>
+
+									<p className="mt-1 text-sm capitalize text-slate-500">
+										{order.status}
+									</p>
+								</div>
+							</div>
+						</Link>
+					))}
+				</div>
+			)}
+		</section>
+	);
 }

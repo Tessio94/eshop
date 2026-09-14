@@ -1,7 +1,6 @@
 import { Link } from "react-router";
 
 import { ProductCarousel } from "@/components/product/ProductCarousel";
-// import { products } from "@/data/products";
 import { PromoBanner } from "@/components/home/PromoBanner";
 import { ShoppingBenefits } from "@/components/home/ShoppingBenefits";
 import { useGetProductsQuery } from "@/services/productApi";
@@ -17,6 +16,8 @@ export function HomePage() {
 					src={landingPhoto}
 					width={1920}
 					height={1080}
+					fetchPriority="high"
+					decoding="async"
 					alt="Customer browsing a fashion collection"
 					className="absolute inset-0 h-full w-full object-cover object-[0%_20%]"
 				/>
