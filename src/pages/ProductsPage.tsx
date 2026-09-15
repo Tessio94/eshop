@@ -11,8 +11,6 @@ import {
 
 import { filterAndSortProducts } from "@/utils/productUtils";
 
-// import { products } from "@/data/products";
-
 import { Pagination } from "@/components/product/Pagination";
 import {
 	ProductFilters,

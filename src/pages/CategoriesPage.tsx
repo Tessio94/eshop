@@ -1,13 +1,12 @@
 import { Link } from "react-router";
 
-// import { products } from "@/data/products";
 import { Banner } from "@/components/category/Banner";
 import {
 	useGetCategoriesQuery,
 	useGetProductsQuery,
 } from "@/services/productApi";
 import { formatCategoryName } from "@/utils/productUtils";
-import { IoCubeOutline, IoCubeSharp } from "react-icons/io5";
+import { IoCubeSharp } from "react-icons/io5";
 
 export function CategoriesPage() {
 	const {

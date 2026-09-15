@@ -7,7 +7,7 @@ import { useGetProductsQuery } from "@/services/productApi";
 import landingPhoto from "@/assets/unsplah_home.jpg";
 
 export function HomePage() {
-	const { data: products = [], isLoading, isError } = useGetProductsQuery();
+	const { data: products = [], isError } = useGetProductsQuery();
 
 	return (
 		<section>
@@ -45,7 +45,18 @@ export function HomePage() {
 						</Link>
 					</div>
 
-					<ProductCarousel products={products.slice(0, 8)} />
+					{isError ? (
+						<div className="rounded-2xl border border-white/10 bg-white/10 p-8 text-center backdrop-blur-sm">
+							<p className="text-lg font-semibold text-white">
+								Unable to load products
+							</p>
+							<p className="mt-2 text-sm text-white/70">
+								Something went wrong while loading the featured products.
+							</p>
+						</div>
+					) : (
+						<ProductCarousel products={products.slice(0, 8)} />
+					)}
 					<PromoBanner />
 
 					<ShoppingBenefits />

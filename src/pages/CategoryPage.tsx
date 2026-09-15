@@ -4,19 +4,17 @@ import { useDebouncedValue } from "rooks";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { selectProductFilters } from "@/features/products/productFilterSelectors";
 import {
-  clearFilters,
-  setCategory,
-  setSearch,
-  setSort,
+	clearFilters,
+	setCategory,
+	setSearch,
+	setSort,
 } from "@/features/products/productFiltersSlice";
 import { useGetProductsByCategoryQuery } from "@/services/productApi";
 
 import {
-  filterAndSortProducts,
-  formatCategoryName,
+	filterAndSortProducts,
+	formatCategoryName,
 } from "@/utils/productUtils";
-
-// import { products } from "@/data/products";
 
 import { Button } from "@/components/common/Button";
 import { ProductList } from "@/components/product/ProductList";
@@ -26,120 +24,148 @@ import { Pagination } from "@/components/product/Pagination";
 const PRODUCTS_PER_PAGE = 8;
 
 export function CategoryPage() {
-  const [currentPage, setCurrentPage] = useState(1);
+	const [currentPage, setCurrentPage] = useState(1);
 
-  const { categoryId } = useParams();
-  const dispatch = useAppDispatch();
+	const { categoryId } = useParams();
+	const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(setCategory(""));
-  }, [dispatch, categoryId]);
+	useEffect(() => {
+		dispatch(setCategory(""));
+	}, [dispatch, categoryId]);
 
-  const filters = useAppSelector(selectProductFilters);
+	const filters = useAppSelector(selectProductFilters);
 
-  const [debouncedSearch] = useDebouncedValue(filters.search, 300);
+	const [debouncedSearch] = useDebouncedValue(filters.search, 300);
 
-  const {
-    data: products = [],
-    isLoading,
-    isError,
-  } = useGetProductsByCategoryQuery(categoryId ?? "");
+	const {
+		data: products = [],
+		isLoading,
+		isError,
+	} = useGetProductsByCategoryQuery(categoryId ?? "");
 
-  const categoryProducts = products.filter(
-    (product) => product.category === categoryId,
-  );
+	const categoryProducts = products.filter(
+		(product) => product.category === categoryId,
+	);
 
-  const filteredProducts = filterAndSortProducts(categoryProducts, {
-    ...filters,
-    search: debouncedSearch,
-    category: "",
-  });
+	const filteredProducts = filterAndSortProducts(categoryProducts, {
+		...filters,
+		search: debouncedSearch,
+		category: "",
+	});
 
-  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+	const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
 
-  const visibleProducts = filteredProducts.slice(
-    (currentPage - 1) * PRODUCTS_PER_PAGE,
-    currentPage * PRODUCTS_PER_PAGE,
-  );
+	const visibleProducts = filteredProducts.slice(
+		(currentPage - 1) * PRODUCTS_PER_PAGE,
+		currentPage * PRODUCTS_PER_PAGE,
+	);
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+	const handlePageChange = (page: number) => {
+		setCurrentPage(page);
 
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
+		window.scrollTo({
+			top: 0,
+			behavior: "smooth",
+		});
+	};
 
-  const formattedCategory = formatCategoryName(categoryId ?? "");
+	const formattedCategory = formatCategoryName(categoryId ?? "");
 
-  if (categoryProducts.length === 0) {
-    return (
-      <section className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-lg rounded-2xl border border-border bg-white p-10 shadow-sm">
-          <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">
-            Category
-          </p>
+	if (isLoading) {
+		return (
+			<section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+				<div className="flex min-h-64 items-center justify-center">
+					<p className="text-sm font-medium text-slate-500">
+						Loading categories...
+					</p>
+				</div>
+			</section>
+		);
+	}
 
-          <h1 className="mt-3 text-3xl font-bold text-slate-900">
-            Category not found
-          </h1>
+	if (isError) {
+		return (
+			<section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+				<div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
+					<h1 className="text-xl font-bold text-red-900">
+						Something went wrong
+					</h1>
 
-          <p className="mt-3 text-slate-500">
-            We couldn't find any products in this category.
-          </p>
+					<p className="mt-2 text-sm text-red-700">
+						We couldn't load the categories. Please try again.
+					</p>
+				</div>
+			</section>
+		);
+	}
 
-          <div className="mt-6">
-            <Link to="/products">
-              <Button>Browse all products</Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-    );
-  }
+	if (categoryProducts.length === 0) {
+		return (
+			<section className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
+				<div className="mx-auto max-w-lg rounded-2xl border border-border bg-white p-10 shadow-sm">
+					<p className="text-sm font-semibold uppercase tracking-wider text-brand-600">
+						Category
+					</p>
 
-  return (
-    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mb-8">
-        <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">
-          Category
-        </p>
+					<h1 className="mt-3 text-3xl font-bold text-slate-900">
+						Category not found
+					</h1>
 
-        <h1 className="mt-2 text-4xl font-bold tracking-tight text-slate-900">
-          {formattedCategory}
-        </h1>
+					<p className="mt-3 text-slate-500">
+						We couldn't find any products in this category.
+					</p>
 
-        <p className="mt-3 text-slate-500">
-          Browse our selection of {formattedCategory.toLowerCase()} products.
-        </p>
-      </div>
+					<div className="mt-6">
+						<Link to="/products">
+							<Button>Browse all products</Button>
+						</Link>
+					</div>
+				</div>
+			</section>
+		);
+	}
 
-      <ProductFilters
-        filters={filters}
-        onSearchChange={(value) => {
-          dispatch(setSearch(value));
-          setCurrentPage(1);
-        }}
-        onSortChange={(value) => {
-          dispatch(setSort(value));
-          setCurrentPage(1);
-        }}
-        onClear={() => {
-          dispatch(clearFilters());
-          setCurrentPage(1);
-        }}
-      />
+	return (
+		<section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+			<div className="mb-8">
+				<p className="text-sm font-semibold uppercase tracking-wider text-brand-600">
+					Category
+				</p>
 
-      <div className="mt-8">
-        <ProductList products={visibleProducts} />
-      </div>
+				<h1 className="mt-2 text-4xl font-bold tracking-tight text-slate-900">
+					{formattedCategory}
+				</h1>
 
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
-    </section>
-  );
+				<p className="mt-3 text-slate-500">
+					Browse our selection of {formattedCategory.toLowerCase()} products.
+				</p>
+			</div>
+
+			<ProductFilters
+				filters={filters}
+				onSearchChange={(value) => {
+					dispatch(setSearch(value));
+					setCurrentPage(1);
+				}}
+				onSortChange={(value) => {
+					dispatch(setSort(value));
+					setCurrentPage(1);
+				}}
+				onClear={() => {
+					dispatch(clearFilters());
+					setCurrentPage(1);
+				}}
+			/>
+
+			<div className="mt-8">
+				<ProductList products={visibleProducts} />
+			</div>
+
+			<Pagination
+				currentPage={currentPage}
+				totalPages={totalPages}
+				onPageChange={handlePageChange}
+			/>
+		</section>
+	);
 }
