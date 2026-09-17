@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import { useDebouncedValue } from "rooks";
 import { useAppDispatch, useAppSelector } from "@/app/hooks";
 import { selectProductFilters } from "@/features/products/productFilterSelectors";
 import {
-	clearFilters,
-	setCategory,
-	setSearch,
-	setSort,
+  clearFilters,
+  setCategory,
+  setSearch,
+  setSort,
 } from "@/features/products/productFiltersSlice";
 import { useGetProductsByCategoryQuery } from "@/services/productApi";
 
 import {
-	filterAndSortProducts,
-	formatCategoryName,
+  filterAndSortProducts,
+  formatCategoryName,
 } from "@/utils/productUtils";
 
-import { Button } from "@/components/common/Button";
 import { ProductList } from "@/components/product/ProductList";
 import { ProductFilters } from "@/components/product/ProductFilters";
 import { Pagination } from "@/components/product/Pagination";
@@ -24,100 +23,100 @@ import { Pagination } from "@/components/product/Pagination";
 const PRODUCTS_PER_PAGE = 8;
 
 export function CategoryPage() {
-	const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
 
-	const { categoryId } = useParams();
-	const dispatch = useAppDispatch();
+  const { categoryId } = useParams();
+  const dispatch = useAppDispatch();
 
-	useEffect(() => {
-		dispatch(setCategory(""));
-	}, [dispatch, categoryId]);
+  useEffect(() => {
+    dispatch(setCategory(""));
+  }, [dispatch, categoryId]);
 
-	const filters = useAppSelector(selectProductFilters);
+  const filters = useAppSelector(selectProductFilters);
 
-	const [debouncedSearch] = useDebouncedValue(filters.search, 300);
+  const [debouncedSearch] = useDebouncedValue(filters.search, 300);
 
-	const {
-		data: products = [],
-		isLoading,
-		isFetching,
-		isError,
-	} = useGetProductsByCategoryQuery(categoryId ?? "");
+  const {
+    data: products = [],
+    isLoading,
+    isFetching,
+    isError,
+  } = useGetProductsByCategoryQuery(categoryId ?? "");
 
-	const categoryProducts = products.filter(
-		(product) => product.category === categoryId,
-	);
+  const categoryProducts = products.filter(
+    (product) => product.category === categoryId,
+  );
 
-	const filteredProducts = filterAndSortProducts(categoryProducts, {
-		...filters,
-		search: debouncedSearch,
-		category: "",
-	});
+  const filteredProducts = filterAndSortProducts(categoryProducts, {
+    ...filters,
+    search: debouncedSearch,
+    category: "",
+  });
 
-	const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
 
-	const visibleProducts = filteredProducts.slice(
-		(currentPage - 1) * PRODUCTS_PER_PAGE,
-		currentPage * PRODUCTS_PER_PAGE,
-	);
+  const visibleProducts = filteredProducts.slice(
+    (currentPage - 1) * PRODUCTS_PER_PAGE,
+    currentPage * PRODUCTS_PER_PAGE,
+  );
 
-	const handlePageChange = (page: number) => {
-		setCurrentPage(page);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
 
-		window.scrollTo({
-			top: 0,
-			behavior: "smooth",
-		});
-	};
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
-	const formattedCategory = formatCategoryName(categoryId ?? "");
+  const formattedCategory = formatCategoryName(categoryId ?? "");
 
-	return (
-		<section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-			<div className="mb-8">
-				<p className="text-sm font-semibold uppercase tracking-wider text-brand-600">
-					Category
-				</p>
+  return (
+    <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mb-8">
+        <p className="text-sm font-semibold uppercase tracking-wider text-brand-600">
+          Category
+        </p>
 
-				<h1 className="mt-2 text-4xl font-bold tracking-tight text-slate-900">
-					{formattedCategory}
-				</h1>
+        <h1 className="mt-2 text-4xl font-bold tracking-tight text-slate-900">
+          {formattedCategory}
+        </h1>
 
-				<p className="mt-3 text-slate-500">
-					Browse our selection of {formattedCategory.toLowerCase()} products.
-				</p>
-			</div>
+        <p className="mt-3 text-slate-500">
+          Browse our selection of {formattedCategory.toLowerCase()} products.
+        </p>
+      </div>
 
-			<ProductFilters
-				filters={filters}
-				onSearchChange={(value) => {
-					dispatch(setSearch(value));
-					setCurrentPage(1);
-				}}
-				onSortChange={(value) => {
-					dispatch(setSort(value));
-					setCurrentPage(1);
-				}}
-				onClear={() => {
-					dispatch(clearFilters());
-					setCurrentPage(1);
-				}}
-			/>
+      <ProductFilters
+        filters={filters}
+        onSearchChange={(value) => {
+          dispatch(setSearch(value));
+          setCurrentPage(1);
+        }}
+        onSortChange={(value) => {
+          dispatch(setSort(value));
+          setCurrentPage(1);
+        }}
+        onClear={() => {
+          dispatch(clearFilters());
+          setCurrentPage(1);
+        }}
+      />
 
-			<div className="mt-8">
-				<ProductList
-					products={visibleProducts}
-					isLoading={isLoading}
-					isFetching={isFetching}
-					isError={isError}
-				/>
-			</div>
+      <div className="mt-8">
+        <ProductList
+          products={visibleProducts}
+          isLoading={isLoading}
+          isFetching={isFetching}
+          isError={isError}
+        />
+      </div>
 
-			<Pagination
-				currentPage={currentPage}
-				totalPages={totalPages}
-				onPageChange={handlePageChange}
-			/>
-		</section>
-	);
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
+    </section>
+  );
 }
