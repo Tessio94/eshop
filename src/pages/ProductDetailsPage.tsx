@@ -9,6 +9,7 @@ import { selectIsFavorite } from "@/features/favorites/favoritesSelectors";
 import { Button } from "@/components/common/Button";
 import { cn } from "@/utils/cn";
 import { BiHeart } from "react-icons/bi";
+import { ProductDetailsSkeleton } from "@/components/product/ProductDetailsSkeleton";
 
 export function ProductDetailsPage() {
 	const { productId } = useParams();
@@ -22,6 +23,10 @@ export function ProductDetailsPage() {
 	} = useGetProductQuery(Number(productId));
 
 	const isFavorite = useAppSelector(selectIsFavorite(product?.id as number));
+
+	if (isLoading) {
+		return <ProductDetailsSkeleton />;
+	}
 
 	if (isError || !product) {
 		return (
@@ -45,18 +50,6 @@ export function ProductDetailsPage() {
 					>
 						Back to products
 					</Link>
-				</div>
-			</section>
-		);
-	}
-
-	if (isLoading) {
-		return (
-			<section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-				<div className="flex min-h-64 items-center justify-center">
-					<p className="text-sm font-medium text-slate-500">
-						Loading product...
-					</p>
 				</div>
 			</section>
 		);

@@ -31,10 +31,10 @@ export function ProductCarousel({ products }: ProductCarouselProps) {
 					slidesPerView: 4,
 				},
 			}}
-			className="!pb-12"
+			className="pb-12!"
 		>
 			{products.map((product) => (
-				<SwiperSlide key={product.id} className="!h-auto">
+				<SwiperSlide key={product.id} className="h-auto!">
 					<ProductCard product={product} />
 				</SwiperSlide>
 			))}

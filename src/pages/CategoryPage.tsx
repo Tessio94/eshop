@@ -40,6 +40,7 @@ export function CategoryPage() {
 	const {
 		data: products = [],
 		isLoading,
+		isFetching,
 		isError,
 	} = useGetProductsByCategoryQuery(categoryId ?? "");
 
@@ -70,60 +71,6 @@ export function CategoryPage() {
 	};
 
 	const formattedCategory = formatCategoryName(categoryId ?? "");
-
-	if (isLoading) {
-		return (
-			<section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-				<div className="flex min-h-64 items-center justify-center">
-					<p className="text-sm font-medium text-slate-500">
-						Loading categories...
-					</p>
-				</div>
-			</section>
-		);
-	}
-
-	if (isError) {
-		return (
-			<section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-				<div className="rounded-2xl border border-red-200 bg-red-50 p-8 text-center">
-					<h1 className="text-xl font-bold text-red-900">
-						Something went wrong
-					</h1>
-
-					<p className="mt-2 text-sm text-red-700">
-						We couldn't load the categories. Please try again.
-					</p>
-				</div>
-			</section>
-		);
-	}
-
-	if (categoryProducts.length === 0) {
-		return (
-			<section className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
-				<div className="mx-auto max-w-lg rounded-2xl border border-border bg-white p-10 shadow-sm">
-					<p className="text-sm font-semibold uppercase tracking-wider text-brand-600">
-						Category
-					</p>
-
-					<h1 className="mt-3 text-3xl font-bold text-slate-900">
-						Category not found
-					</h1>
-
-					<p className="mt-3 text-slate-500">
-						We couldn't find any products in this category.
-					</p>
-
-					<div className="mt-6">
-						<Link to="/products">
-							<Button>Browse all products</Button>
-						</Link>
-					</div>
-				</div>
-			</section>
-		);
-	}
 
 	return (
 		<section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -158,7 +105,12 @@ export function CategoryPage() {
 			/>
 
 			<div className="mt-8">
-				<ProductList products={visibleProducts} />
+				<ProductList
+					products={visibleProducts}
+					isLoading={isLoading}
+					isFetching={isFetching}
+					isError={isError}
+				/>
 			</div>
 
 			<Pagination

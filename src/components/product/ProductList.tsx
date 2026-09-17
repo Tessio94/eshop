@@ -1,12 +1,22 @@
 import type { Product } from "@/types/product";
 import { ProductCard } from "./ProductCard";
+import { cn } from "@/utils/cn";
+import { ProductCardSkeleton } from "./ProductCardSkeleton";
 
 type ProductListProps = {
 	products: Product[];
+	isLoading: boolean;
+	isFetching: boolean;
+	isError: boolean;
 };
 
-export function ProductList({ products }: ProductListProps) {
-	if (products.length === 0) {
+export function ProductList({
+	products,
+	isLoading,
+	isFetching,
+	isError,
+}: ProductListProps) {
+	if (isError) {
 		return (
 			<div className="rounded-2xl border border-dashed border-border bg-white px-6 py-16 text-center">
 				<div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-brand-50 text-brand-600">
@@ -34,10 +44,19 @@ export function ProductList({ products }: ProductListProps) {
 	}
 
 	return (
-		<div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-			{products.map((product) => (
-				<ProductCard key={product.id} product={product} />
-			))}
+		<div
+			className={cn(
+				"grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 transition-opacity duration-200",
+				isFetching && "opacity-60",
+			)}
+		>
+			{isLoading
+				? Array.from({ length: 8 }, (_, i) => i).map((numberIndex) => (
+						<ProductCardSkeleton key={numberIndex} />
+					))
+				: products.map((product) => (
+						<ProductCard key={product.id} product={product} />
+					))}
 		</div>
 	);
 }

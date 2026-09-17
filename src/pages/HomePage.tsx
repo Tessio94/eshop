@@ -5,9 +5,16 @@ import { PromoBanner } from "@/components/home/PromoBanner";
 import { ShoppingBenefits } from "@/components/home/ShoppingBenefits";
 import { useGetProductsQuery } from "@/services/productApi";
 import landingPhoto from "@/assets/unsplah_home.jpg";
+import { cn } from "@/utils/cn";
+import { ProductCarouselSkeleton } from "@/components/product/ProductCarouselSkeleton";
 
 export function HomePage() {
-	const { data: products = [], isError } = useGetProductsQuery();
+	const {
+		data: products = [],
+		isError,
+		isLoading,
+		isFetching,
+	} = useGetProductsQuery();
 
 	return (
 		<section>
@@ -45,18 +52,29 @@ export function HomePage() {
 						</Link>
 					</div>
 
-					{isError ? (
+					{isLoading ? (
+						<ProductCarouselSkeleton count={8} />
+					) : isError ? (
 						<div className="rounded-2xl border border-white/10 bg-white/10 p-8 text-center backdrop-blur-sm">
 							<p className="text-lg font-semibold text-white">
 								Unable to load products
 							</p>
+
 							<p className="mt-2 text-sm text-white/70">
 								Something went wrong while loading the featured products.
 							</p>
 						</div>
 					) : (
-						<ProductCarousel products={products.slice(0, 8)} />
+						<div
+							className={cn(
+								"transition-opacity duration-200",
+								isFetching && "opacity-60",
+							)}
+						>
+							<ProductCarousel products={products.slice(0, 8)} />
+						</div>
 					)}
+
 					<PromoBanner />
 
 					<ShoppingBenefits />

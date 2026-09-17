@@ -4,19 +4,17 @@ import { store } from "@/app/store";
 import { productApi } from "@/services/productApi";
 
 /* Products Loaders */
-export async function productsLoader() {
-	await store
-		.dispatch(
-			productApi.endpoints.getProducts.initiate(undefined, {
-				subscribe: false,
-			}),
-		)
-		.unwrap();
+export function productsLoader() {
+	store.dispatch(
+		productApi.endpoints.getProducts.initiate(undefined, {
+			subscribe: false,
+		}),
+	);
 
 	return null;
 }
 
-export async function productDetailsLoader({ params }: LoaderFunctionArgs) {
+export function productDetailsLoader({ params }: LoaderFunctionArgs) {
 	const productId = Number(params.productId);
 
 	if (Number.isNaN(productId)) {
@@ -25,7 +23,7 @@ export async function productDetailsLoader({ params }: LoaderFunctionArgs) {
 		});
 	}
 
-	await store
+	store
 		.dispatch(
 			productApi.endpoints.getProduct.initiate(productId, {
 				subscribe: false,
@@ -37,8 +35,8 @@ export async function productDetailsLoader({ params }: LoaderFunctionArgs) {
 }
 
 /* Category Loaders */
-export async function categoriesLoader() {
-	await Promise.all([
+export function categoriesLoader() {
+	Promise.all([
 		store
 			.dispatch(
 				productApi.endpoints.getCategories.initiate(undefined, {
@@ -59,7 +57,7 @@ export async function categoriesLoader() {
 	return null;
 }
 
-export async function categoryProductsLoader({ params }: LoaderFunctionArgs) {
+export function categoryProductsLoader({ params }: LoaderFunctionArgs) {
 	const categoryId = params.categoryId;
 
 	if (!categoryId) {
@@ -68,7 +66,7 @@ export async function categoryProductsLoader({ params }: LoaderFunctionArgs) {
 		});
 	}
 
-	await store
+	store
 		.dispatch(
 			productApi.endpoints.getProductsByCategory.initiate(categoryId, {
 				subscribe: false,
