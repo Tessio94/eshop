@@ -5,7 +5,6 @@ import { productApi } from "@/services/productApi";
 
 /* Products Loaders */
 export async function productsLoader() {
-	setTimeout(() => {}, 3000);
 	await store
 		.dispatch(
 			productApi.endpoints.getProducts.initiate(undefined, {
