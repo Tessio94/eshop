@@ -47,6 +47,7 @@ export function ProductDetailsPage() {
 					<Link
 						to="/products"
 						className="mt-8 inline-flex rounded-lg bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-700"
+						viewTransition
 					>
 						Back to products
 					</Link>
@@ -60,6 +61,7 @@ export function ProductDetailsPage() {
 			<Link
 				to="/products"
 				className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-brand-600"
+				viewTransition
 			>
 				<span aria-hidden="true">←</span>
 				Back to products
@@ -70,6 +72,9 @@ export function ProductDetailsPage() {
 					<img
 						src={product.image}
 						alt={product.title}
+						style={{
+							viewTransitionName: `product-image-${product.id}`,
+						}}
 						className="mx-auto aspect-square max-h-[500px] w-full object-contain"
 					/>
 				</div>

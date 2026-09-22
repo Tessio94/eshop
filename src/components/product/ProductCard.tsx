@@ -25,10 +25,14 @@ export function ProductCard({ product }: ProductCardProps) {
 				<Link
 					to={`/products/${product.id}`}
 					className="flex h-full items-center justify-center"
+					viewTransition
 				>
 					<img
 						src={product.image}
 						alt={product.title}
+						style={{
+							viewTransitionName: `product-image-${product.id}`,
+						}}
 						className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
 					/>
 				</Link>
@@ -58,7 +62,7 @@ export function ProductCard({ product }: ProductCardProps) {
 					{product.category}
 				</p>
 
-				<Link to={`/products/${product.id}`} className="mt-2">
+				<Link to={`/products/${product.id}`} className="mt-2" viewTransition>
 					<h2 className="line-clamp-2 text-base font-semibold text-slate-900 transition group-hover:text-brand-600">
 						{product.title}
 					</h2>

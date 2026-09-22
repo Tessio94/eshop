@@ -47,6 +47,7 @@ export function HomePage() {
 						<Link
 							to="/products"
 							className="hidden text-sm font-semibold text-white! transition hover:text-brand-700 sm:block"
+							viewTransition
 						>
 							View all →
 						</Link>

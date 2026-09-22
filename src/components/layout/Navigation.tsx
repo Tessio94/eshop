@@ -31,6 +31,7 @@ export function Navigation({ mobile = false, onClick }: NavigationProps) {
 								: "text-slate-600 hover:bg-slate-50 hover:text-brand-600",
 						)
 					}
+					viewTransition
 				>
 					{link.label}
 				</NavLink>

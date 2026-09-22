@@ -23,6 +23,7 @@ export function PromoBanner() {
 						<Link
 							to="/products"
 							className="inline-flex rounded-xl bg-accent-400 px-5 pt-3 pb-2.5 font-bold text-slate-900 transition hover:bg-accent-300"
+							viewTransition
 						>
 							Explore products
 						</Link>
